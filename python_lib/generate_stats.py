@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from argparser import Stats_parser
+from argparser import StatsParser
 import logging
 
 
@@ -25,7 +25,7 @@ def generate_stats(
 
 
 if __name__ == "__main__":
-    args = Stats_parser.parse_args()
+    args = StatsParser.parse_args()
     generate_stats(
         args.sample_id,
         args.host_reads,

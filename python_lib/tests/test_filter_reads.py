@@ -1,33 +1,33 @@
 import pytest
 from filter_reads import main
-from filter_functions import Filter_reads
+from filter_functions import FilterReads
 
 
 @pytest.fixture()
-def filter():
-    filter = Filter_reads("test_data/test.bmtagger.list")
-    return filter
+def filterer():
+    filterer = FilterReads("test_data/test.bmtagger.list")
+    return filterer
 
 
 @pytest.fixture
 def human():
-    filter = Filter_reads("test_data/test.bmtagger.list")
-    human = filter.load_human_reads()
+    filterer = FilterReads("test_data/test.bmtagger.list")
+    human = filterer.load_human_reads()
     return human
 
 
-def test_load_human_reads(filter):
-    assert filter.load_human_reads() == {"R1": None, "R3": None}
+def test_load_human_reads(filterer):
+    assert filterer.load_human_reads() == {"R1": None, "R3": None}
 
 
-def test_get_human_reads(capsys, human, filter):
-    filter.get_human_reads("test_data/test.fastq", human)
+def test_get_human_reads(capsys, human, filterer):
+    filterer.get_human_reads("test_data/test.fastq", human)
     captured = capsys.readouterr()
     assert captured.out == "@R1/1\nCG\n+\nFF\n@R3/1\nGC\n+\nFF\n"
 
 
-def test_get_non_human_reads(capsys, human, filter):
-    filter.get_non_human_reads("test_data/test.fastq", human)
+def test_get_non_human_reads(capsys, human, filterer):
+    filterer.get_non_human_reads("test_data/test.fastq", human)
     captured = capsys.readouterr()
     assert captured.out == "@R2/1\nGC\n+\nFF\n@R4/1\nGC\n+\nFF\n"
 

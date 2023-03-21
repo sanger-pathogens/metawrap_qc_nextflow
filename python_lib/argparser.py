@@ -3,7 +3,7 @@
 import argparse
 
 
-class Filter_parser:
+class FilterParser:
     def parse_args(args=None):
         parser = argparse.ArgumentParser()
         parser.add_argument(
@@ -18,63 +18,54 @@ class Filter_parser:
             help="Read file e.g. reads_1.fastq",
             required=True,
         )
-        parser.add_argument(
+        group = parser.add_mutually_exclusive_group(required=True)
+        group.add_argument(
             "--skip-human-reads",
             "-s",
             help="Skip human reads",
-            required=False,
-            default=False,
             action="store_true",
         )
-        parser.add_argument(
+        group.add_argument(
             "--get-human-reads",
             "-g",
             help="Get human reads",
-            required=False,
-            default=False,
             action="store_true",
         )
         args = parser.parse_args()
         return args
 
 
-class Stats_parser:
+class StatsParser:
     def parse_args(args=None):
         parser = argparse.ArgumentParser()
         parser.add_argument(
             "--host-reads",
-            "-hr",
             help="Number of host reads",
             required=True,
             type=int,
         )
         parser.add_argument(
             "--non-host-reads",
-            "-nr",
             help="Number of non host reads",
             required=True,
             type=int,
         )
         parser.add_argument(
             "--total-trimmed-reads",
-            "-ttr",
             help="Total number of reads after trimming",
             required=True,
             type=int,
         )
         parser.add_argument(
             "--total-original-reads",
-            "-tor",
             help="Total number of reads before trimming",
             required=True,
             type=int,
         )
         parser.add_argument(
             "--sample-id",
-            "-s",
             help="Sample ID",
             required=True,
-            type=str,
         )
         args = parser.parse_args()
         return args

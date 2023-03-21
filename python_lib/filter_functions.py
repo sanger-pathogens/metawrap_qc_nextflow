@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 
-class Filter_reads:
-    def __init__(self, read_list):
+class FilterReads:
+    def __init__(self, read_list: str):
         self.read_list = read_list
 
     def load_human_reads(self):
@@ -10,12 +10,11 @@ class Filter_reads:
 
         human = {}
         with open(self.read_list, "r") as f:
-            data = f.readlines()
-            for line in data:
+            for i, line in enumerate(f):
                 human[line.strip()] = None
         return human
 
-    def get_human_reads(self, read_file, human):
+    def get_human_reads(self, read_file: str, human: dict):
         """Function which prints out human reads as identified by bmtagger"""
 
         with open(read_file, "r") as f:
@@ -27,7 +26,7 @@ class Filter_reads:
                 if get:
                     print(line.rstrip())
 
-    def get_non_human_reads(self, read_file, human):
+    def get_non_human_reads(self, read_file: str, human: dict):
         """Function which prints out non-human reads as identified by bmtagger"""
 
         with open(read_file, "r") as f:
