@@ -20,4 +20,3 @@ def test_generate_stats_incorrect_reads(caplog, capsys):
         in caplog.text
     )
     assert exit_info.value.code == 1
-
