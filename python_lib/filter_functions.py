@@ -10,7 +10,7 @@ class FilterReads:
 
         human = {}
         with open(self.read_list, "r") as f:
-            for i, line in enumerate(f):
+            for line in f:
                 human[line.strip()] = None
         return human
 

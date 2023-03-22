@@ -11,10 +11,13 @@ def test_generate_stats(capsys):
     )
 
 
-def test_generate_stats_incorrect_reads(caplog):
-    with caplog.at_level(logging.WARNING):
-        generate_stats("sample_id", 100, 10, 100, 120)
+def test_generate_stats_incorrect_reads(caplog, capsys):
+    with pytest.raises(SystemExit) as exit_info:
+        with caplog.at_level(logging.ERROR):
+            generate_stats("sample_id", 100, 10, 100, 120)
     assert (
         "The number of host and non host reads does not equal the total number of reads, please investigate!"
         in caplog.text
     )
+    assert exit_info.value.code == 1
+
