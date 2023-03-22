@@ -15,7 +15,7 @@ def generate_stats(
         logging.error(
             "The number of host and non host reads does not equal the total number of reads, please investigate!"
         )
-        exit(1)
+        raise SystemExit(1)
     percentage_host_reads = round(((host_reads / total_trimmed_reads) * 100), 5)
     percentage_non_host_reads = round(((non_host_reads / total_trimmed_reads) * 100), 5)
     percentage_reads_trimmed = round(
