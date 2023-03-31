@@ -1,7 +1,7 @@
 process FILTER_HOST_READS {
     publishDir "${params.results_dir}/cleaned_reads", mode: 'copy', overwrite: true, pattern: "*_clean*.fastq.gz"
     tag "$sample_id"
-    container '/software/pathogen/images/metawrap_qc_python-1.8.simg'
+    container '/software/pathogen/images/metawrap_qc_python-1.0.simg'
 
     input:
     tuple val(sample_id), path(first_read), path(second_read)
@@ -26,7 +26,7 @@ process FILTER_HOST_READS {
 process GET_HOST_READS {
     if (params.publish_host_reads) { publishDir path: "${params.results_dir}/host_reads", mode: 'copy', overwrite: true, pattern: "*_host*.fastq.gz" }
     tag "$sample_id"
-    container '/software/pathogen/images/metawrap_qc_python-1.8.simg'
+    container '/software/pathogen/images/metawrap_qc_python-1.0.simg'
 
     input:
     tuple val(sample_id), path(first_read), path(second_read)
