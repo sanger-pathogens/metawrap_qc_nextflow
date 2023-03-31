@@ -14,20 +14,12 @@ stages:
 
 Check Black format:
   stage: format
-  only:
-    - branches
-  except:
-    - tags
   script:
     - pip install black
     - black . --check --diff --color
 
 Pytest:
   stage: test
-  only:
-    - branches
-  except:
-    - tags
   script:
     - pip install --upgrade pip
     - pip install pytest
