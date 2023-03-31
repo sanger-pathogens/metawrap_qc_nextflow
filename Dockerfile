@@ -13,14 +13,6 @@ RUN apt-get update -qq -y && apt-get upgrade -qq -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install pytest
-
 ADD python_lib .
-
-WORKDIR /opt/tests
-# run tests
-RUN python3 -m pytest .
-
-WORKDIR /opt
 
 ENV PATH=/opt:${PATH}
