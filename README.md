@@ -2,6 +2,7 @@
 This pipeline performs adapter trimming using trim-galore and human read removal using bmtagger and is based off the metaWRAP software (https://github.com/bxlab/metaWRAP)
 This pipeline supports illumina paired end sequencing data only.
 
+
 ## Usage
 ```
     nextflow run .
@@ -18,6 +19,25 @@ This pipeline supports illumina paired end sequencing data only.
 ```
 
 An example manifest is stored in this repo ([example_manifest.csv](./example_manifest.csv)).
+
+
+## Generating manifests
+### If your data is stored in the PaM informatics pipeline system, you can use the following method:
+`./generate_manifest_from_lanes.sh -l <lanes_file>`
+
+For more information, run:
+`./generate_manifest_from_lanes.sh -h`
+
+### If your data is not stored in the PaM informatics pipeline system, you can use the following method:
+#### Step 1:
+Obtain fastq paths:
+`ls -d -1 <path>/*.fastq.gz > fastq_paths.txt`
+#### Step 2:
+Generate manifest:
+`./generate_manifest.sh fastq_paths.txt`
+
+This will output the manifest to `manifest.csv` which can be fed into the nextflow pipeline
+
 
 ## Dependencies
 This pipeline relies on the following modules:
