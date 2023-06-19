@@ -22,7 +22,7 @@ def PRINT_HELP() {
       -profile                     always use sanger_lsf when running on the farm (mandatory)
       --results_dir                Name of results folder, default: nextflow_results (optional)
       --bmtagger_db                Path to bmtagger database, default: /data/pam/software/BMTAGGER_INDEX (optional)
-      --bmtagger_host              Name of bmtagger host, default: hg38 (optional)
+      --bmtagger_host              Name of bmtagger host, default: T2T-CHM13v2.0 (optional)
       --skip_fastqc                Skip FASTQC, default: false (optional)
       --publish_host_reads         Publish host reads to results folder, default: false (optional)
       --help                       print this help message (optional)
