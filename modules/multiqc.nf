@@ -1,6 +1,11 @@
 process MULTIQC {
-    publishDir "${params.results_dir}/multiqc", mode: 'copy', overwrite: true, pattern: "*.html"
+    label 'cpu_1'
+    label 'mem_4'
+    label 'time_queue_from_normal'
+
     container '/software/pathogen/images/multiqc-1.14--pyhdfd78af_0.simg'
+
+    publishDir "${params.results_dir}/multiqc", mode: 'copy', overwrite: true, pattern: "*.html"
 
     input:
     path(fastqc_reports)
