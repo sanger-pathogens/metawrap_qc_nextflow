@@ -4,17 +4,17 @@ This pipeline supports illumina paired end sequencing data only.
 
 ## Usage
 ```
-    nextflow run .
-    
-    Options:
-      --manifest                   Manifest containing paths to fastq files (mandatory)
-      -profile                     always use sanger_lsf when running on the farm (mandatory)
-      --results_dir                Name of results folder, default: nextflow_results (optional)
-      --bmtagger_db                Path to bmtagger database, default: /data/pam/software/BMTAGGER_INDEX (optional)
-      --bmtagger_host              Name of bmtagger host, default: T2T-CHM13v2.0 (optional)
-      --skip_fastqc                Skip FASTQC, default: false (optional)
-      --publish_host_reads         Publish host reads to results folder, default: false (optional)
-      --help                       print this help message (optional)
+Usage:
+nextflow run main.nf
+
+Options:
+  --manifest                   Manifest containing paths to fastq files (mandatory)
+  --results_dir                Name of results folder. [default: nextflow_results] (optional)
+  --bmtagger_db                Path to bmtagger database. [default: /data/pam/software/BMTAGGER_INDEX] (optional)
+  --bmtagger_host              Name of bmtagger host. [default: T2T-CHM13v2.0] (optional)
+  --skip_fastqc                Skip FASTQC. [default: false] (optional)
+  --publish_host_reads         Publish host reads to results folder. [default: false] (optional)
+  --help                       Print this help message. (optional)
 ```
 
 An example manifest is stored in this repo ([example_manifest.csv](./example_manifest.csv)).
@@ -22,8 +22,8 @@ An example manifest is stored in this repo ([example_manifest.csv](./example_man
 ## Dependencies
 This pipeline relies on the following modules:
 ```
-nextflow/22.10
-ISG/singularity/3.6.4
+nextflow
+ISG/singularity
 ```
 
 ## Example commands
@@ -31,17 +31,17 @@ ISG/singularity/3.6.4
 Running the pipeline with the default configuration:
 ```
 module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest <your_manifest.csv> -profile sanger_lsf --results_dir example_results
+bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest <your_manifest.csv> --results_dir example_results
 ```
 
 Running the pipeline without FASTQC:
 ```
 module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest manifest.csv -profile sanger_lsf --skip_fastqc
+bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest manifest.csv --skip_fastqc
 ```
 
 Running the pipeline with publishing host reads to results folder:
 ```
 module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest manifest.csv -profile sanger_lsf --publish_host_reads
+bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest manifest.csv --publish_host_reads
 ```
