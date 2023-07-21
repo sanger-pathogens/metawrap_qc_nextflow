@@ -31,17 +31,17 @@ ISG/singularity
 Running the pipeline with the default configuration:
 ```
 module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest <your_manifest.csv> --results_dir example_results
+bsub.py 5 -q oversubscribed metawrap_job nextflow run main.nf --manifest <your_manifest.csv> --results_dir example_results
 ```
 
 Running the pipeline without FASTQC:
 ```
 module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest manifest.csv --skip_fastqc
+bsub.py 5 -q oversubscribed metawrap_job nextflow run main.nf --manifest manifest.csv --skip_fastqc
 ```
 
 Running the pipeline with publishing host reads to results folder:
 ```
 module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run . --manifest manifest.csv --publish_host_reads
+bsub.py 5 -q oversubscribed metawrap_job nextflow run main.nf --manifest manifest.csv --publish_host_reads
 ```
