@@ -1,5 +1,9 @@
 process FASTQC {
-    tag "$sample_id"
+    tag "${sample_id}"
+    label 'cpu_1'
+    label 'mem_16'
+    label 'time_queue_from_normal'
+
     container '/software/pathogen/images/fastqc-0.11.9--hdfd78af_1.simg'
 
     input:

@@ -1,4 +1,4 @@
-sample_id,first_read,second_read
+ID,R1,R2
 41167_2#1,/data/pam/applications/vr-pipelines/prokaryotes/seq-pipelines/metagenome/TRACKING/6236/CHAIN10089647/SLX/42249046/41167_2#1/41167_2#1_1.fastq.gz,/data/pam/applications/vr-pipelines/prokaryotes/seq-pipelines/metagenome/TRACKING/6236/CHAIN10089647/SLX/42249046/41167_2#1/41167_2#1_2.fastq.gz
 41511_1#1,/data/pam/applications/vr-pipelines/prokaryotes/seq-pipelines/metagenome/TRACKING/6236/CHAIN10089647/SLX/42249046/41511_1#1/41511_1#1_1.fastq.gz,/data/pam/applications/vr-pipelines/prokaryotes/seq-pipelines/metagenome/TRACKING/6236/CHAIN10089647/SLX/42249046/41511_1#1/41511_1#1_2.fastq.gz
 41511_2#1,/data/pam/applications/vr-pipelines/prokaryotes/seq-pipelines/metagenome/TRACKING/6236/CHAIN10089647/SLX/42249046/41511_2#1/41511_2#1_1.fastq.gz,/data/pam/applications/vr-pipelines/prokaryotes/seq-pipelines/metagenome/TRACKING/6236/CHAIN10089647/SLX/42249046/41511_2#1/41511_2#1_2.fastq.gz

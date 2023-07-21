@@ -1,4 +1,4 @@
-def VALIDATE_PARAMETERS() {
+def validate_parameters() {
     // Parameter checking function
     def errors = 0
 
