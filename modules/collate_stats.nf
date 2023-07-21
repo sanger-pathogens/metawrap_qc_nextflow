@@ -1,5 +1,4 @@
 process COLLATE_STATS {
-    tag "${sample_id}"
     label 'cpu_1'
     label 'mem_1'
     label 'time_queue_from_normal'
