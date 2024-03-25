@@ -3,7 +3,7 @@ process MULTIQC {
     label 'mem_4'
     label 'time_queue_from_normal'
 
-    container 'quay.io/biocontainers/multiqc:1.14--pyhdfd78af_0'
+    container 'quay.io/biocontainers/multiqc:1.19--pyhdfd78af_0'
 
     publishDir "${params.results_dir}/multiqc", mode: 'copy', overwrite: true, pattern: "*.html"
 
