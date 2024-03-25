@@ -4,7 +4,7 @@ process FILTER_HOST_READS {
     label 'mem_8'
     label 'time_queue_from_normal'
 
-    container '/software/pathogen/images/metawrap_qc_python-1.0.simg'
+    container 'quay.io/sangerpathogens/metawrap_qc_python:1.0'
 
     publishDir "${params.results_dir}/cleaned_reads", mode: 'copy', overwrite: true, pattern: "*_clean*.fastq.gz"
 
@@ -34,7 +34,7 @@ process GET_HOST_READS {
     label 'mem_8'
     label 'time_queue_from_normal'
 
-    container '/software/pathogen/images/metawrap_qc_python-1.0.simg'
+    container 'quay.io/sangerpathogens/metawrap_qc_python:1.0'
 
     publishDir enabled: params.publish_host_reads, path: "${params.results_dir}/host_reads", mode: 'copy', overwrite: true, pattern: "*_host*.fastq.gz"
 
