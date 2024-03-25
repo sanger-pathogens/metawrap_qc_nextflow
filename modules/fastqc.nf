@@ -4,7 +4,7 @@ process FASTQC {
     label 'mem_16'
     label 'time_queue_from_normal'
 
-    container '/software/pathogen/images/fastqc-0.11.9--hdfd78af_1.simg'
+    container 'quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1'
 
     input:
     tuple val(sample_id), path(first_read), path(second_read)
