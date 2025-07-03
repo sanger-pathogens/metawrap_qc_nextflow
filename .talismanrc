@@ -1,2 +1,7 @@
 threshold: medium
 version: "1.0"
+
+fileignoreconfig:
+  # Ignoring both as base64-encoding makes the image content flag as potential secrets
+  - filename: "example_manifest.csv"
+    ignore_detectors: [filecontent]
