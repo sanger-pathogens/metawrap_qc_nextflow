@@ -1,6 +1,6 @@
 import pytest
-from filter_reads import main
 from filter_functions import FilterReads
+from filter_reads import main
 
 
 @pytest.fixture()
