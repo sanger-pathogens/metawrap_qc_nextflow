@@ -25,7 +25,7 @@ module-whatis "generate_manifest_from_lanes.sh"
 # Load prerequisite modules
 module switch nextflow
 module switch ISG/singularity
-module load ISG/experimental/irods/4.2.7
+module load ISG/IRODS
 
 # Load message
 if { [ module-info mode load ] } {
