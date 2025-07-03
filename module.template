@@ -1,0 +1,40 @@
+#%Module1.0#####################################################################
+##
+## Parasites and Microbes metawrap_qc_nextflow {{version}}
+##
+
+# help setup
+proc ModulesHelp { } {
+  global version modroot
+
+  puts stderr "Custom deployment managed by pathogen informatics: {{path}}"
+  puts stderr "Executables:"
+  puts stderr "\tmetawrap_qc_nextflow"
+  puts stderr "\tgenerate_manifest.sh"
+  puts stderr "\tgenerate_manifest_from_lanes.sh"
+  puts stderr "Home page: {{repo_url}}"
+}
+
+# Whatis setup
+module-whatis "Custom deployment managed by pathogen informatics: {{path}}"
+module-whatis "Executables:"
+module-whatis "metawrap_qc_nextflow"
+module-whatis "generate_manifest.sh"
+module-whatis "generate_manifest_from_lanes.sh"
+
+# Load prerequisite modules
+module switch nextflow
+module switch ISG/singularity
+module load ISG/experimental/irods/4.2.7
+
+# Load message
+if { [ module-info mode load ] } {
+    puts stderr "\tModule loaded. For more information run 'module help metawrap_qc_nextflow/{{version}}'."
+}
+
+# Conflicts
+conflict metawrap_qc_nextflow
+
+# Add wrappers to PATH
+prepend-path PATH "{{path}}/metawrap_qc_nextflow"
+
