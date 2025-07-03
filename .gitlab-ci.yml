@@ -10,3 +10,9 @@ pytest:
     - pip install pytest
   script:
     - pytest -vv
+
+# Tell Talisman to ignore the git history (before introduction of .talismanrc / taslisman CI job)
+# (as we are confident that previous warnings are not true positive security risks)
+talisman:
+  variables:
+    TALISMAN_OPTS: "--scan --ignoreHistory"
