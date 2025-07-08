@@ -1,6 +1,6 @@
 default_language_version:
   # the version of python should match the python docker container used in CI
-  python: python3.11
+  python: python3.12
 # versions of the modules and options should match those used in CI
 repos:
   - repo: https://github.com/thoughtworks/talisman
@@ -45,18 +45,3 @@ repos:
         additional_dependencies:
           - prettier@3.1.0
           - prettier-plugin-svelte@3.2.3
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.56.0
-    hooks:
-      - id: eslint
-        name: "ESLint (Javascript linting)"
-        args:
-          - --fix
-          - --no-error-on-unmatched-pattern
-        files: \.svelte|js$
-        types: [file]
-        additional_dependencies:
-          - eslint@8.56.0
-          - eslint-plugin-jest@26.4.6
-          - eslint-plugin-svelte3@4.0.0
-          - eslint-config-prettier@8.5.0
