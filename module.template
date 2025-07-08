@@ -11,7 +11,6 @@ proc ModulesHelp { } {
   puts stderr "Executables:"
   puts stderr "\tmetawrap_qc_nextflow"
   puts stderr "\tgenerate_manifest.sh"
-  puts stderr "\tgenerate_manifest_from_lanes.sh"
   puts stderr "Home page: {{repo_url}}"
 }
 
@@ -20,7 +19,6 @@ module-whatis "Custom deployment managed by pathogen informatics: {{path}}"
 module-whatis "Executables:"
 module-whatis "metawrap_qc_nextflow"
 module-whatis "generate_manifest.sh"
-module-whatis "generate_manifest_from_lanes.sh"
 
 # Load prerequisite modules
 module switch nextflow

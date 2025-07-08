@@ -1,12 +1,25 @@
+stages:
+  - before_build
+  - test
+  - deploy
+  - security_scans
+  - after_security_scans
+
 include:
   - project: "sanger-pathogens/templates/ci-templates"
     ref: "$CI_CD_TEMPLATES_LATEST_STABLE"
     file: "Pipelines/PaM-Info-Nextflow.gitlab-ci.yml"
+  - project: "sanger-pathogens/templates/ci-templates"
+    ref: "$CI_CD_TEMPLATES_LATEST_STABLE"
+    file: "unit-tests-pytest-template.yml"
 
-pytest:
-  extends: .before_build_job_template
-  before_script:
-    - pip install --upgrade pip
-    - pip install pytest
-  script:
-    - pytest -vv
+# Tell Talisman to ignore the git history (before introduction of .talismanrc / taslisman CI job)
+# (as we are confident that previous warnings are not true positive security risks)
+talisman:
+  variables:
+    TALISMAN_OPTS: "--scan --ignoreHistory"
+
+unit_tests_pytest:
+  variables:
+    DOCKER_IMAGE_NAME: python
+    DOCKER_TAG: 3.13-slim-bookworm
