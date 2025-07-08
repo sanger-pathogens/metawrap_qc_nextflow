@@ -1,0 +1,5 @@
+threshold: medium
+version: "1.0"
+fileignoreconfig:
+- filename: example_manifest.csv
+  checksum: 0ca7536fe94d543c9c0e0820efd395cdd31e0f3dee53aa556886b955c5acb827

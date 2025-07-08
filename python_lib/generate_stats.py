@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from argparser import StatsParser
 import logging
+
+from argparser import StatsParser
 
 
 def generate_stats(
@@ -18,10 +19,12 @@ def generate_stats(
         raise SystemExit(1)
     percentage_host_reads = round(((host_reads / total_trimmed_reads) * 100), 5)
     percentage_non_host_reads = round(((non_host_reads / total_trimmed_reads) * 100), 5)
-    percentage_reads_trimmed = round(
-        ((total_original_reads - total_trimmed_reads) / total_original_reads) * 100, 5
+    percentage_reads_trimmed = round(((total_original_reads - total_trimmed_reads) / total_original_reads) * 100, 5)
+    stats_string = (
+        f"{sample_id},{host_reads},{non_host_reads},{total_trimmed_reads},"
+        f"{percentage_host_reads},{percentage_non_host_reads},{total_original_reads},"
+        f"{percentage_reads_trimmed}"
     )
-    stats_string = f"{sample_id},{host_reads},{non_host_reads},{total_trimmed_reads},{percentage_host_reads},{percentage_non_host_reads},{total_original_reads},{percentage_reads_trimmed}"
     print(stats_string)
 
 
