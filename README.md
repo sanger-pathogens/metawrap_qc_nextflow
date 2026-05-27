@@ -84,6 +84,10 @@ sampleB,/path/to/sampleB_1.fastq.gz,/path/to/sampleB_2.fastq.gz
 
 An example manifest is provided in this repository: [example_manifest.csv](./example_manifest.csv).
 
+#### Generating a manifest
+
+**Sanger users:** the [manifest_generator](https://gitlab.internal.sanger.ac.uk/sanger-pathogens/pipelines/manifest_generator/) tool can generate a compatible `ID,R1,R2` manifest from a directory of FASTQ files or from iRODS.
+
 ### Output
 
 Results are written to `--results_dir` (default: `./nextflow_results`):
@@ -114,34 +118,34 @@ nextflow_results/
 
 **Input options**
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `--manifest` | `path` | `""` | Input manifest CSV with required header `ID,R1,R2` (mandatory). |
+| Option       | Type   | Default | Description                                                     |
+| ------------ | ------ | ------- | --------------------------------------------------------------- |
+| `--manifest` | `path` | `""`    | Input manifest CSV with required header `ID,R1,R2` (mandatory). |
 
 ---
 
 **Decontamination options**
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `--bmtagger_db` | `path` | `/data/pam/software/bmtagger` | Path to the BMTagger database directory. |
-| `--bmtagger_host` | `string` | `T2T-CHM13v2.0` | Name of the BMTagger host reference to use for human read removal. |
+| Option            | Type     | Default                       | Description                                                        |
+| ----------------- | -------- | ----------------------------- | ------------------------------------------------------------------ |
+| `--bmtagger_db`   | `path`   | `/data/pam/software/bmtagger` | Path to the BMTagger database directory.                           |
+| `--bmtagger_host` | `string` | `T2T-CHM13v2.0`               | Name of the BMTagger host reference to use for human read removal. |
 
 ---
 
 **Pipeline options**
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `--skip_fastqc` | `boolean` | `false` | Skip FastQC steps (both pre- and post-filtering). |
+| Option                 | Type      | Default | Description                                          |
+| ---------------------- | --------- | ------- | ---------------------------------------------------- |
+| `--skip_fastqc`        | `boolean` | `false` | Skip FastQC steps (both pre- and post-filtering).    |
 | `--publish_host_reads` | `boolean` | `false` | Publish host (human) reads to the results directory. |
 
 ---
 
 **Output options**
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
+| Option          | Type   | Default              | Description                          |
+| --------------- | ------ | -------------------- | ------------------------------------ |
 | `--results_dir` | `path` | `./nextflow_results` | Directory where results are written. |
 
 ### Advanced usage
@@ -162,13 +166,13 @@ All dependencies are containerised in publicly available Docker/Singularity imag
 
 ## Software versions
 
-| Software | Version | Image |
-| --- | --- | --- |
-| FastQC | 0.11.9 | `quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1` |
-| TrimGalore | 0.4.4 | `quay.io/sangerpathogens/trimgalore:v0.4.4` |
-| BMTagger | 3.101 | `quay.io/biocontainers/bmtagger:3.101--h470a237_4` |
-| MultiQC | 1.19 | `quay.io/biocontainers/multiqc:1.19--pyhdfd78af_0` |
-| Python (stats) | 1.0 | `quay.io/sangerpathogens/metawrap_qc_python:1.0` |
+| Software       | Version | Image                                              |
+| -------------- | ------- | -------------------------------------------------- |
+| FastQC         | 0.11.9  | `quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1`  |
+| TrimGalore     | 0.4.4   | `quay.io/sangerpathogens/trimgalore:v0.4.4`        |
+| BMTagger       | 3.101   | `quay.io/biocontainers/bmtagger:3.101--h470a237_4` |
+| MultiQC        | 1.19    | `quay.io/biocontainers/multiqc:1.19--pyhdfd78af_0` |
+| Python (stats) | 1.0     | `quay.io/sangerpathogens/metawrap_qc_python:1.0`   |
 
 ## Troubleshooting
 
