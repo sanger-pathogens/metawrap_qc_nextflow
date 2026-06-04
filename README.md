@@ -94,24 +94,16 @@ Results are written to `--results_dir` (default: `./nextflow_results`):
 
 ```
 nextflow_results/
-  fastqc/
-    pre_filtering/
-      <sample_ID>_1_fastqc.html    # FastQC reports on raw reads
-      <sample_ID>_2_fastqc.html
-    post_filtering/
-      <sample_ID>_1_fastqc.html    # FastQC reports on cleaned reads
-      <sample_ID>_2_fastqc.html
-  clean_reads/
-    <sample_ID>_1.fastq.gz         # Adapter-trimmed, human-depleted reads
-    <sample_ID>_2.fastq.gz
+  cleaned_reads/
+    <sample_ID>_clean_1.fastq.gz   # Adapter-trimmed, human-depleted reads
+    <sample_ID>_clean_2.fastq.gz
   host_reads/                      # Only when --publish_host_reads is set
     <sample_ID>_host_1.fastq.gz
     <sample_ID>_host_2.fastq.gz
   multiqc/
-    pre_filtering_multiqc.html     # MultiQC reports
-    post_filtering_multiqc.html
-  stats/
-    <sample_ID>_stats.csv          # Per-sample read count statistics
+    pre_qc_multiqc_report.html     # MultiQC report on raw reads (unless --skip_fastqc)
+    post_qc_multiqc_report.html    # MultiQC report on cleaned reads (unless --skip_fastqc)
+  read_removal_statistics.csv      # Per-sample read removal statistics
 ```
 
 ### Parameters
