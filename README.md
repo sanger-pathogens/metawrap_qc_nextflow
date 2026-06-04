@@ -25,7 +25,7 @@ This pipeline supports Illumina paired-end sequencing data only.
 1. Clone this repository:
 
    ```bash
-   git clone --recurse-submodules https://gitlab.internal.sanger.ac.uk/sanger-pathogens/pipelines/metawrap_qc_nextflow.git
+   git clone <repo-url>
    cd metawrap_qc_nextflow
    ```
 
