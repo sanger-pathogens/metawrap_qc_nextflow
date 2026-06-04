@@ -179,7 +179,9 @@ All dependencies are containerised in publicly available Docker/Singularity imag
 - **BMTagger database not found**: ensure `--bmtagger_db` points to a directory containing a valid BMTagger index for the selected host reference. On the Sanger HPC the default path `/data/pam/software/bmtagger` should be available.
 - **Out of memory for BMTagger**: BMTagger loads the full database into memory. The default resource allocation uses 16 GB RAM; request more via a custom config if needed.
 - **Resuming a failed run**: add `-resume` to your command to restart from cached intermediate results.
-- For further help, check `.nextflow.log` and the per-process logs in the `work/` directory.
+- For further help, check `.nextflow.log` and the per-process `.command.log` logs in the `work/` directory.
+
+Sanger users may find [this page](https://ssg-confluence.internal.sanger.ac.uk/spaces/PaMI/pages/181078206/General+pipeline+info#Generalpipelineinfo-Troubleshootingafailedpipelinerunandsendingabugreport) useful for troubleshooting Nextflow pipeline runs.
 
 ## Issues and Contributions
 
