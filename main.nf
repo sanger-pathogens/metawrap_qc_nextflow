@@ -37,15 +37,11 @@ if (params.help) {
 // MODULES
 //
 include { validate_parameters } from './modules/helper_functions.nf'
-include { FASTQC as PRE_FILTERING_FASTQC } from './modules/fastqc.nf'
-include { FASTQC as POST_FILTERING_FASTQC } from './modules/fastqc.nf'
-include { MULTIQC as PRE_FILTERING_MULTIQC } from './modules/multiqc.nf'
-include { MULTIQC as POST_FILTERING_MULTIQC } from './modules/multiqc.nf'
-include { TRIMGALORE } from './modules/trimgalore.nf'
-include { BMTAGGER } from './modules/bmtagger.nf'
-include { FILTER_HOST_READS; GET_HOST_READS } from './modules/filter_reads.nf'
-include { GENERATE_STATS } from './modules/generate_stats.nf'
-include { COLLATE_STATS } from './modules/collate_stats.nf'
+include { FASTQC as PRE_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
+include { FASTQC as POST_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
+include { MULTIQC as PRE_FILTERING_MULTIQC } from './assorted-sub-workflows/reporting/modules/multiqc.nf'
+include { MULTIQC as POST_FILTERING_MULTIQC } from './assorted-sub-workflows/reporting/modules/multiqc.nf'
+include { METAWRAP_QC } from './assorted-sub-workflows/mags_maker/metawrap_qc/modules/metawrap_qc.nf'
 
 /*
 ========================================================================================
@@ -73,22 +69,7 @@ workflow {
         PRE_FILTERING_MULTIQC(PRE_FILTERING_FASTQC.out.fastqc_ch.collect(), post_qc_report)
     }
 
-    TRIMGALORE(fastq_path_ch)
-
-    BMTAGGER(TRIMGALORE.out.trimmed_fastqs)
-
-    FILTER_HOST_READS(BMTAGGER.out.data_ch, BMTAGGER.out.bmtagger_list_ch)
-
-    GET_HOST_READS(BMTAGGER.out.data_ch, BMTAGGER.out.bmtagger_list_ch)
-
-    all_reads_ch = FILTER_HOST_READS.out.data_ch
-        .join(FILTER_HOST_READS.out.cleaned_ch)
-        .join(GET_HOST_READS.out.host_ch)
-        .join(fastq_path_ch)
-
-    GENERATE_STATS(all_reads_ch)
-
-    COLLATE_STATS(GENERATE_STATS.out.stats_ch.collect())
+    METAWRAP_QC(fastq_path_ch)
 
     if (!params.skip_fastqc) {
         POST_FILTERING_FASTQC(FILTER_HOST_READS.out.cleaned_ch)
