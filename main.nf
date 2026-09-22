@@ -37,11 +37,12 @@ if (params.help) {
 // MODULES
 //
 include { validate_parameters } from './modules/helper_functions.nf'
+include { MIXED_INPUT } from './assorted-sub-workflows/subworkflows/mixed_input.nf'
 include { FASTQC as PRE_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
 include { FASTQC as POST_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
 include { MULTIQC as PRE_FILTERING_MULTIQC } from './assorted-sub-workflows/reporting/modules/multiqc.nf'
 include { MULTIQC as POST_FILTERING_MULTIQC } from './assorted-sub-workflows/reporting/modules/multiqc.nf'
-include { METAWRAP_QC } from './assorted-sub-workflows/mags_maker/metawrap_qc/modules/metawrap_qc.nf'
+include { METAWRAP_QC } from './assorted-sub-workflows/mags_maker/metawrap_qc/metawrap_qc.nf'
 
 /*
 ========================================================================================
@@ -58,10 +59,8 @@ validate_parameters()
 */
 
 workflow {
-    manifest_ch = Channel.fromPath(params.manifest)
 
-    fastq_path_ch = manifest_ch.splitCsv(header: true, sep: ',')
-        .map{ row -> tuple(row.ID, file(row.R1), file(row.R2)) }
+    fastq_path_ch = MIXED_INPUT()
 
     if (!params.skip_fastqc) {
         PRE_FILTERING_FASTQC(fastq_path_ch)
