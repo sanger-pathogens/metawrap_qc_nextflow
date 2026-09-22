@@ -36,8 +36,8 @@ if (params.help) {
 //
 // MODULES
 //
-include { validate_parameters } from './modules/helper_functions.nf'
-include { MIXED_INPUT } from './assorted-sub-workflows/subworkflows/mixed_input.nf'
+include { validate_parameters } from './assorted-sub-workflows/mixed_input/validate_parameters.nf'
+include { MIXED_INPUT } from './assorted-sub-workflows/mixed_input/mixed_input.nf'
 include { FASTQC as PRE_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
 include { FASTQC as POST_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
 include { MULTIQC as PRE_FILTERING_MULTIQC } from './assorted-sub-workflows/reporting/modules/multiqc.nf'
