@@ -11,7 +11,7 @@ nextflow run main.nf
 
 Options:
   --manifest                   Manifest containing paths to fastq files (mandatory)
-  --results_dir                Name of results folder. [default: nextflow_results] (optional)
+  --outdir                     Name of results folder. [default: results] (optional)
   --bmtagger_db                Path to bmtagger database. [default: /data/pam/software/bmtagger] (optional)
   --bmtagger_host              Name of bmtagger host. [default: T2T-CHM13v2.0] (optional)
   --skip_fastqc                Skip FASTQC. [default: false] (optional)

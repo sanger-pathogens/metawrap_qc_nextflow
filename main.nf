@@ -1,31 +1,33 @@
 #!/usr/bin/env nextflow
 
+÷
+
 /*
 ========================================================================================
     HELP
 ========================================================================================
 */
 
+def logo = NextflowTool.logo(workflow, params.monochrome_logs)
+
+log.info logo
+
+NextflowTool.commandLineParams(workflow.commandLine, log, params.monochrome_logs)
+
+
 def printHelp() {
-    log.info """
-    Usage:
-    nextflow run main.nf
-
-    Options:
-      --manifest                   Manifest containing paths to fastq files (mandatory)
-      --results_dir                Name of results folder. [default: nextflow_results] (optional)
-      --bmtagger_db                Path to bmtagger database. [default: /data/pam/software/bmtagger] (optional)
-      --bmtagger_host              Name of bmtagger host. [default: T2T-CHM13v2.0] (optional)
-      --skip_fastqc                Skip FASTQC. [default: false] (optional)
-      --publish_host_reads         Publish host reads to results folder. [default: false] (optional)
-      --help                       Print this help message. (optional)
-    """.stripIndent()
+    NextflowTool.help_message("${workflow.ProjectDir}/schema.json", 
+                               ["${workflow.ProjectDir}/assorted-sub-workflows/irods_extractor/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/mixed_input/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/kraken2bracken/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/taxo_profile/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/qc/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/pipeline_events/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/pipeline_chaining/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/mags_maker/metawrap_qc/schema.json"],
+    params.monochrome_logs, log)
 }
 
-if (params.help) {
-    printHelp()
-    exit 0
-}
 
 /*
 ========================================================================================

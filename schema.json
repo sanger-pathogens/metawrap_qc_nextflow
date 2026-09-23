@@ -1,0 +1,11 @@
+{
+  "pipeline": "Base schema",
+  "params": {
+    "Output options": {
+      "outdir": {
+        "default": "./results",
+        "help_text": "Directory where all results are published."
+      }
+    }
+  }
+}
