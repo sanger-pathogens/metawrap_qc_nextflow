@@ -67,7 +67,7 @@ workflow {
     METAWRAP_QC(fastq_path_ch)
 
     if (!params.skip_fastqc) {
-        POST_FILTERING_FASTQC(FILTER_HOST_READS.out.cleaned_ch)
+        POST_FILTERING_FASTQC(METAWRAP_QC.out.filtered_reads)
         def post_qc_report = true
         POST_FILTERING_MULTIQC(POST_FILTERING_FASTQC.out.zip.collect(), post_qc_report)
     }
