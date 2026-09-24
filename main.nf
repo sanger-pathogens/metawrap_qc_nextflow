@@ -1,7 +1,5 @@
 #!/usr/bin/env nextflow
 
-÷
-
 /*
 ========================================================================================
     HELP
@@ -27,7 +25,6 @@ def printHelp() {
                                 "${workflow.ProjectDir}/assorted-sub-workflows/mags_maker/metawrap_qc/schema.json"],
     params.monochrome_logs, log)
 }
-
 
 /*
 ========================================================================================
