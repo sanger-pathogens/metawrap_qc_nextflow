@@ -61,7 +61,7 @@ workflow {
     if (!params.skip_fastqc) {
         PRE_FILTERING_FASTQC(fastq_path_ch)
         def post_qc_report = false
-        PRE_FILTERING_MULTIQC(PRE_FILTERING_FASTQC.out.fastqc_ch.collect(), post_qc_report)
+        PRE_FILTERING_MULTIQC(PRE_FILTERING_FASTQC.out.zip.collect(), post_qc_report)
     }
 
     METAWRAP_QC(fastq_path_ch)
@@ -69,7 +69,7 @@ workflow {
     if (!params.skip_fastqc) {
         POST_FILTERING_FASTQC(FILTER_HOST_READS.out.cleaned_ch)
         def post_qc_report = true
-        POST_FILTERING_MULTIQC(POST_FILTERING_FASTQC.out.fastqc_ch.collect(), post_qc_report)
+        POST_FILTERING_MULTIQC(POST_FILTERING_FASTQC.out.zip.collect(), post_qc_report)
     }
 }
 
