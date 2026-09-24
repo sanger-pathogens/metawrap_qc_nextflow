@@ -28,7 +28,7 @@ def printHelp() {
 //
 // MODULES
 //
-include { validate_parameters } from './assorted-sub-workflows/mixed_input/validate_parameters.nf'
+include { validate_parameters } from './assorted-sub-workflows/mixed_input/modules/validate_parameters.nf'
 include { MIXED_INPUT } from './assorted-sub-workflows/mixed_input/mixed_input.nf'
 include { FASTQC as PRE_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
 include { FASTQC as POST_FILTERING_FASTQC } from './assorted-sub-workflows/qc/modules/fastqc.nf'
