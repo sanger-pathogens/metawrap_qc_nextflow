@@ -6,6 +6,12 @@
         "default": "./results",
         "help_text": "Directory where all results are published."
       }
+    },
+    "reporting_params": {
+      "monochrome_logs": {
+        "default": false,
+        "help_text": "Print this message (and future log messages) only in plain text"
+      }
     }
   }
 }

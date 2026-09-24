@@ -17,11 +17,7 @@ def printHelp() {
     NextflowTool.help_message("${workflow.ProjectDir}/schema.json", 
                                ["${workflow.ProjectDir}/assorted-sub-workflows/irods_extractor/schema.json",
                                 "${workflow.ProjectDir}/assorted-sub-workflows/mixed_input/schema.json",
-                                "${workflow.ProjectDir}/assorted-sub-workflows/kraken2bracken/schema.json",
-                                "${workflow.ProjectDir}/assorted-sub-workflows/taxo_profile/schema.json",
                                 "${workflow.ProjectDir}/assorted-sub-workflows/qc/schema.json",
-                                "${workflow.ProjectDir}/assorted-sub-workflows/pipeline_events/schema.json",
-                                "${workflow.ProjectDir}/assorted-sub-workflows/pipeline_chaining/schema.json",
                                 "${workflow.ProjectDir}/assorted-sub-workflows/mags_maker/metawrap_qc/schema.json"],
     params.monochrome_logs, log)
 }
@@ -58,6 +54,10 @@ validate_parameters()
 */
 
 workflow {
+    if (params.help) {
+        printHelp()
+        exit 0
+    }
 
     fastq_path_ch = MIXED_INPUT()
 
@@ -74,4 +74,8 @@ workflow {
         def post_qc_report = true
         POST_FILTERING_MULTIQC(POST_FILTERING_FASTQC.out.fastqc_ch.collect(), post_qc_report)
     }
+}
+
+workflow.onComplete {
+    NextflowTool.summary(workflow, params, log)
 }
