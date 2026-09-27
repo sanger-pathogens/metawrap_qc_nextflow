@@ -58,11 +58,11 @@ workflow {
 
     fastq_path_ch = MIXED_INPUT()
 
-    PRE_FILTERING_FASTQC_MULTIQC(fastq_path_ch)
+    PRE_FILTERING_FASTQC_MULTIQC(fastq_path_ch, "pre_qc_")
 
     METAWRAP_QC(fastq_path_ch)
 
-    POST_FILTERING_FASTQC_MULTIQC(METAWRAP_QC.out.filtered_reads)
+    POST_FILTERING_FASTQC_MULTIQC(METAWRAP_QC.out.filtered_reads, "post_qc_")
 }
 
 workflow.onComplete {
