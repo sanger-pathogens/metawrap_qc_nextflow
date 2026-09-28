@@ -6,25 +6,19 @@
 ========================================================================================
 */
 
+def logo = NextflowTool.logo(workflow, params.monochrome_logs)
+
+log.info logo
+
+NextflowTool.commandLineParams(workflow.commandLine, params, log, params.monochrome_logs)
+
 def printHelp() {
-    log.info """
-    Usage:
-    nextflow run main.nf
-
-    Options:
-      --manifest                   Manifest containing paths to fastq files (mandatory)
-      --results_dir                Name of results folder. [default: nextflow_results] (optional)
-      --bmtagger_db                Path to bmtagger database. [default: /data/pam/software/bmtagger] (optional)
-      --bmtagger_host              Name of bmtagger host. [default: T2T-CHM13v2.0] (optional)
-      --skip_fastqc                Skip FASTQC. [default: false] (optional)
-      --publish_host_reads         Publish host reads to results folder. [default: false] (optional)
-      --help                       Print this help message. (optional)
-    """.stripIndent()
-}
-
-if (params.help) {
-    printHelp()
-    exit 0
+    NextflowTool.help_message("${workflow.ProjectDir}/schema.json", 
+                               ["${workflow.ProjectDir}/assorted-sub-workflows/irods_extractor/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/mixed_input/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/qc/schema.json",
+                                "${workflow.ProjectDir}/assorted-sub-workflows/mags_maker/metawrap_qc/schema.json"],
+    params.monochrome_logs, log)
 }
 
 /*
@@ -36,16 +30,11 @@ if (params.help) {
 //
 // MODULES
 //
-include { validate_parameters } from './modules/helper_functions.nf'
-include { FASTQC as PRE_FILTERING_FASTQC } from './modules/fastqc.nf'
-include { FASTQC as POST_FILTERING_FASTQC } from './modules/fastqc.nf'
-include { MULTIQC as PRE_FILTERING_MULTIQC } from './modules/multiqc.nf'
-include { MULTIQC as POST_FILTERING_MULTIQC } from './modules/multiqc.nf'
-include { TRIMGALORE } from './modules/trimgalore.nf'
-include { BMTAGGER } from './modules/bmtagger.nf'
-include { FILTER_HOST_READS; GET_HOST_READS } from './modules/filter_reads.nf'
-include { GENERATE_STATS } from './modules/generate_stats.nf'
-include { COLLATE_STATS } from './modules/collate_stats.nf'
+include { validate_parameters } from './assorted-sub-workflows/mixed_input/modules/validate_parameters.nf'
+include { MIXED_INPUT } from './assorted-sub-workflows/mixed_input/mixed_input.nf'
+include { FASTQC_MULTIQC as PRE_FILTERING_FASTQC_MULTIQC } from './assorted-sub-workflows/qc/subworkflows/fastqc_reporting.nf'
+include { FASTQC_MULTIQC as POST_FILTERING_FASTQC_MULTIQC } from './assorted-sub-workflows/qc/subworkflows/fastqc_reporting.nf'
+include { METAWRAP_QC } from './assorted-sub-workflows/mags_maker/metawrap_qc/metawrap_qc.nf'
 
 /*
 ========================================================================================
@@ -62,37 +51,20 @@ validate_parameters()
 */
 
 workflow {
-    manifest_ch = Channel.fromPath(params.manifest)
-
-    fastq_path_ch = manifest_ch.splitCsv(header: true, sep: ',')
-        .map{ row -> tuple(row.ID, file(row.R1), file(row.R2)) }
-
-    if (!params.skip_fastqc) {
-        PRE_FILTERING_FASTQC(fastq_path_ch)
-        def post_qc_report = false
-        PRE_FILTERING_MULTIQC(PRE_FILTERING_FASTQC.out.fastqc_ch.collect(), post_qc_report)
+    if (params.help) {
+        printHelp()
+        exit 0
     }
 
-    TRIMGALORE(fastq_path_ch)
+    fastq_path_ch = MIXED_INPUT()
 
-    BMTAGGER(TRIMGALORE.out.trimmed_fastqs)
+    PRE_FILTERING_FASTQC_MULTIQC(fastq_path_ch, "pre_qc_report")
 
-    FILTER_HOST_READS(BMTAGGER.out.data_ch, BMTAGGER.out.bmtagger_list_ch)
+    METAWRAP_QC(fastq_path_ch)
 
-    GET_HOST_READS(BMTAGGER.out.data_ch, BMTAGGER.out.bmtagger_list_ch)
+    POST_FILTERING_FASTQC_MULTIQC(METAWRAP_QC.out.filtered_reads, "post_qc_report")
+}
 
-    all_reads_ch = FILTER_HOST_READS.out.data_ch
-        .join(FILTER_HOST_READS.out.cleaned_ch)
-        .join(GET_HOST_READS.out.host_ch)
-        .join(fastq_path_ch)
-
-    GENERATE_STATS(all_reads_ch)
-
-    COLLATE_STATS(GENERATE_STATS.out.stats_ch.collect())
-
-    if (!params.skip_fastqc) {
-        POST_FILTERING_FASTQC(FILTER_HOST_READS.out.cleaned_ch)
-        def post_qc_report = true
-        POST_FILTERING_MULTIQC(POST_FILTERING_FASTQC.out.fastqc_ch.collect(), post_qc_report)
-    }
+workflow.onComplete {
+    NextflowTool.summary(workflow, params, log)
 }

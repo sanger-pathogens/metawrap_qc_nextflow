@@ -25,8 +25,9 @@ This pipeline supports Illumina paired-end sequencing data only.
 1. Clone this repository:
 
    ```bash
-   git clone <repo-url>
-   cd metawrap_qc_nextflow
+   git clone --recurse-submodules https://github.com/sanger-pathogens/metawrap_qc_nextflow.git && \  
+     cd metawrap_qc_nextflow && \
+     git submodule init
    ```
 
 2. To run with `docker`, use the `-profile docker` option:
@@ -35,7 +36,7 @@ This pipeline supports Illumina paired-end sequencing data only.
    nextflow run main.nf \
        -profile docker \
        --manifest manifest.csv \
-       --results_dir my_output
+       --outdir my_output
    ```
 
    Other profiles are also supported (`singularity`).
@@ -66,10 +67,21 @@ metawrap_qc_nextflow --help
 Submit to LSF:
 
 ```bash
-bsub -o output.o -e error.e -q oversubscribed -R "select[mem>4000] rusage[mem=4000]" -M4000 \
+jobname="my_metawrap_qc_run" # you can edit this!
+bsub -o ${jobname}.%J.o -e ${jobname}.%J.e -q oversubscribed -J ${jobname} -R "select[mem>4000] rusage[mem=4000]" -M4000 \
     metawrap_qc_nextflow \
         --manifest manifest.csv \
-        --results_dir my_output
+        --outdir "results_${jobname}"
+```
+
+#### From code archive downloaded from the Github Release section or from Zenodo
+
+Please be aware that the code archive asset attached to a release will have empty folders for the dependcy submodules `assorted-sub-workflows` ([repository](https://github.com/sanger-pathogens/assorted-sub-workflows)) and `lib` (points to `nextflowtool` [repository](https://github.com/sanger-pathogens/nextflowtool)). The code executed from these archives will therefore **NOT** be functional. Unfortunately, the `.git` folder will be missing too, meaning that it is not a working `git` repository and submodule folders _cannot_ be populated with `git submodule init`.  
+
+It is thus recommended to use the `git clone` appraoch described above, adding the commands below to get the code version referred to in the release:
+```bash
+git checkout <revision_tag> # e.g. revision_tag can be "v1.8.1"
+git pull --recurse-submodules
 ```
 
 ### Input
@@ -86,22 +98,28 @@ sampleB,/path/to/sampleB_1.fastq.gz,/path/to/sampleB_2.fastq.gz
 
 An example manifest is provided in this repository: [example_manifest.csv](./example_manifest.csv).
 
-#### Generating a manifest
+#### Other input options.
 
-**Sanger users:** the [manifest_generator](https://gitlab.internal.sanger.ac.uk/sanger-pathogens/pipelines/manifest_generator/) tool can generate a compatible `ID,R1,R2` manifest from a directory of FASTQ files or from iRODS.
+Several input options are available, including `--manifest_of_lanes`, `--manifest_ena`, `--manifest_from_dir` and/or a combination of some of the follwing pramaeters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
+
+
+#### Generating a manifest from a directory of FASTQ files or iRODS metadata
+
+**Sanger users only:** the [manifest_generator](https://gitlab.internal.sanger.ac.uk/sanger-pathogens/pipelines/manifest_generator/) tool can generate a compatible `ID,R1,R2` manifest from a directory of FASTQ files or from iRODS.
 
 ### Output
 
-Results are written to `--results_dir` (default: `./nextflow_results`):
+Results are written to the value of `--outdir` parameter (default: `./results`):
 
 ```
-nextflow_results/
-  cleaned_reads/
-    <sample_ID>_clean_1.fastq.gz   # Adapter-trimmed, human-depleted reads
-    <sample_ID>_clean_2.fastq.gz
-  host_reads/                      # Only when --publish_host_reads is set
-    <sample_ID>_host_1.fastq.gz
-    <sample_ID>_host_2.fastq.gz
+results/
+  metawrap_qc/
+    cleaned_reads/
+      <sample_ID>_clean_1.fastq.gz   # Adapter-trimmed, human-depleted reads
+      <sample_ID>_clean_2.fastq.gz
+    host_reads/                      # Only when --publish_host_reads is set
+      <sample_ID>_host_1.fastq.gz
+      <sample_ID>_host_2.fastq.gz
   multiqc/
     pre_qc_multiqc_report.html     # MultiQC report on raw reads (unless --skip_fastqc)
     post_qc_multiqc_report.html    # MultiQC report on cleaned reads (unless --skip_fastqc)
@@ -112,9 +130,19 @@ nextflow_results/
 
 **Input options**
 
-| Option       | Type   | Default | Description                                                     |
-| ------------ | ------ | ------- | --------------------------------------------------------------- |
-| `--manifest` | `path` | `""`    | Input manifest CSV with required header `ID,R1,R2` (mandatory). |
+Multiple input options are available, and can be combined. Providing at least one is mandatory.
+
+| Option                | Type   | Default | Description                                                              |
+| --------------------- | ------ | ------- | ------------------------------------------------------------------------ |
+| `--manifest_of_reads` | `path` | `null`    | Input manifest CSV with required header `ID,R1,R2`.                      |
+| `--manifest`          | `path` | `null`    | Same as `--manifest_of_reads` (alias).                                   |
+| `--manifest_of_lanes` | `path` | `null`    | Input manifest CSV for submission of multiple iRODS (meta)data queries; various header fields can be used that refer to iRODS metadata fields, including `sudyid`,`runid`,`laneid`,`plexid` or `type`.          |
+| `--manifest_ena` | `path` | `null`    | Input manifest for submission of multiple ENA (meta)data queries; no header required, the only required content should be ENA accessions, one per line. This option should be accopanied by the `--accession_type` option. |
+| `--accession_type` | `str` | `"run"` | One of the following types: `run`, `study`, `sample`.          |
+| `--manifest_from_dir` | `path` | `null` | Path to a folder containing paired Fastq files; file pairing will be done automatically; see help message from [the executed script](./assorted-sub-workflows/mixed_input/bin/generate_manifest.py). |
+| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str` | `null` | individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query). |
+
+For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
 
 ---
 
@@ -141,6 +169,7 @@ nextflow_results/
 | Option          | Type   | Default              | Description                          |
 | --------------- | ------ | -------------------- | ------------------------------------ |
 | `--results_dir` | `path` | `./nextflow_results` | Directory where results are written. |
+| `--save_fastqc` | `boolean` | `false` | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports).    |
 
 ### Advanced usage
 
