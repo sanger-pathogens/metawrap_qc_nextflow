@@ -191,10 +191,10 @@ All dependencies are containerised in publicly available Docker/Singularity imag
 
 | Software       | Version | Image                                              |
 | -------------- | ------- | -------------------------------------------------- |
-| FastQC         | 0.11.9  | `quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1`  |
+| FastQC         | 0.12.1  | `quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0`  |
 | TrimGalore     | 0.4.4   | `quay.io/sangerpathogens/trimgalore:v0.4.4`        |
 | BMTagger       | 3.101   | `quay.io/biocontainers/bmtagger:3.101--h470a237_4` |
-| MultiQC        | 1.19    | `quay.io/biocontainers/multiqc:1.19--pyhdfd78af_0` |
+| MultiQC        | 1.35    | `quay.io/biocontainers/multiqc:1.35--pyhdfd78af_1` |
 | Python (stats) | 1.0     | `quay.io/sangerpathogens/metawrap_qc_python:1.0`   |
 
 ## Troubleshooting
