@@ -3,8 +3,8 @@
   "params": {
     "Pipeline options": {
       "skip_fastqc": {
-          "default": false,
-          "help_text": "Skip FastQC steps (both pre- and post-filtering)."
+        "default": false,
+        "help_text": "Skip FastQC steps (both pre- and post-filtering)."
       }
     },
     "Output options": {
@@ -13,8 +13,8 @@
         "help_text": "Directory where all results are published."
       },
       "save_fastqc": {
-          "default": false,
-          "help_text": "Flag to publish individual FastQC reports (both pre- and post-filtering)."
+        "default": false,
+        "help_text": "Flag to publish individual FastQC reports (both pre- and post-filtering)."
       }
     },
     "reporting_params": {

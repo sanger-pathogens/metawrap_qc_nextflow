@@ -25,7 +25,7 @@ This pipeline supports Illumina paired-end sequencing data only.
 1. Clone this repository:
 
    ```bash
-   git clone --recurse-submodules https://github.com/sanger-pathogens/metawrap_qc_nextflow.git && \  
+   git clone --recurse-submodules https://github.com/sanger-pathogens/metawrap_qc_nextflow.git && \
      cd metawrap_qc_nextflow && \
      git submodule init
    ```
@@ -76,9 +76,10 @@ bsub -o ${jobname}.%J.o -e ${jobname}.%J.e -q oversubscribed -J ${jobname} -R "s
 
 #### From code archive downloaded from the Github Release section or from Zenodo
 
-Please be aware that the code archive asset attached to a release will have empty folders for the dependcy submodules `assorted-sub-workflows` ([repository](https://github.com/sanger-pathogens/assorted-sub-workflows)) and `lib` (points to `nextflowtool` [repository](https://github.com/sanger-pathogens/nextflowtool)). The code executed from these archives will therefore **NOT** be functional. Unfortunately, the `.git` folder will be missing too, meaning that it is not a working `git` repository and submodule folders _cannot_ be populated with `git submodule init`.  
+Please be aware that the code archive asset attached to a release will have empty folders for the dependcy submodules `assorted-sub-workflows` ([repository](https://github.com/sanger-pathogens/assorted-sub-workflows)) and `lib` (points to `nextflowtool` [repository](https://github.com/sanger-pathogens/nextflowtool)). The code executed from these archives will therefore **NOT** be functional. Unfortunately, the `.git` folder will be missing too, meaning that it is not a working `git` repository and submodule folders _cannot_ be populated with `git submodule init`.
 
 It is thus recommended to use the `git clone` appraoch described above, adding the commands below to get the code version referred to in the release:
+
 ```bash
 git checkout <revision_tag> # e.g. revision_tag can be "v1.8.1"
 git pull --recurse-submodules
@@ -101,7 +102,6 @@ An example manifest is provided in this repository: [example_manifest.csv](./exa
 #### Other input options.
 
 Several input options are available, including `--manifest_of_lanes`, `--manifest_ena`, `--manifest_from_dir` and/or a combination of some of the follwing pramaeters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
-
 
 #### Generating a manifest from a directory of FASTQ files or iRODS metadata
 
@@ -132,15 +132,15 @@ results/
 
 Multiple input options are available, and can be combined. Providing at least one is mandatory.
 
-| Option                | Type   | Default | Description                                                              |
-| --------------------- | ------ | ------- | ------------------------------------------------------------------------ |
-| `--manifest_of_reads` | `path` | `null`    | Input manifest CSV with required header `ID,R1,R2`.                      |
-| `--manifest`          | `path` | `null`    | Same as `--manifest_of_reads` (alias).                                   |
-| `--manifest_of_lanes` | `path` | `null`    | Input manifest CSV for submission of multiple iRODS (meta)data queries; various header fields can be used that refer to iRODS metadata fields, including `sudyid`,`runid`,`laneid`,`plexid` or `type`.          |
-| `--manifest_ena` | `path` | `null`    | Input manifest for submission of multiple ENA (meta)data queries; no header required, the only required content should be ENA accessions, one per line. This option should be accopanied by the `--accession_type` option. |
-| `--accession_type` | `str` | `"run"` | One of the following types: `run`, `study`, `sample`.          |
-| `--manifest_from_dir` | `path` | `null` | Path to a folder containing paired Fastq files; file pairing will be done automatically; see help message from [the executed script](./assorted-sub-workflows/mixed_input/bin/generate_manifest.py). |
-| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str` | `null` | individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query). |
+| Option                                          | Type   | Default | Description                                                                                                                                                                                                                |
+| ----------------------------------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--manifest_of_reads`                           | `path` | `null`  | Input manifest CSV with required header `ID,R1,R2`.                                                                                                                                                                        |
+| `--manifest`                                    | `path` | `null`  | Same as `--manifest_of_reads` (alias).                                                                                                                                                                                     |
+| `--manifest_of_lanes`                           | `path` | `null`  | Input manifest CSV for submission of multiple iRODS (meta)data queries; various header fields can be used that refer to iRODS metadata fields, including `sudyid`,`runid`,`laneid`,`plexid` or `type`.                     |
+| `--manifest_ena`                                | `path` | `null`  | Input manifest for submission of multiple ENA (meta)data queries; no header required, the only required content should be ENA accessions, one per line. This option should be accopanied by the `--accession_type` option. |
+| `--accession_type`                              | `str`  | `"run"` | One of the following types: `run`, `study`, `sample`.                                                                                                                                                                      |
+| `--manifest_from_dir`                           | `path` | `null`  | Path to a folder containing paired Fastq files; file pairing will be done automatically; see help message from [the executed script](./assorted-sub-workflows/mixed_input/bin/generate_manifest.py).                       |
+| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str`  | `null`  | individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query).                                                               |
 
 For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
 
@@ -166,10 +166,10 @@ For more information, please read [the MIXED_INPUT workflow documentation](./ass
 
 **Output options**
 
-| Option          | Type   | Default              | Description                          |
-| --------------- | ------ | -------------------- | ------------------------------------ |
-| `--results_dir` | `path` | `./nextflow_results` | Directory where results are written. |
-| `--save_fastqc` | `boolean` | `false` | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports).    |
+| Option          | Type      | Default              | Description                                                                                            |
+| --------------- | --------- | -------------------- | ------------------------------------------------------------------------------------------------------ |
+| `--results_dir` | `path`    | `./nextflow_results` | Directory where results are written.                                                                   |
+| `--save_fastqc` | `boolean` | `false`              | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports). |
 
 ### Advanced usage
 
