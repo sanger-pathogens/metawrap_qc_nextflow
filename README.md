@@ -176,7 +176,7 @@ For more information, please read [the MIXED_INPUT workflow documentation](./ass
 
 | Option          | Type      | Default              | Description                                                                                            |
 | --------------- | --------- | -------------------- | ------------------------------------------------------------------------------------------------------ |
-| `--results_dir` | `path`    | `./nextflow_results` | Directory where results are written.                                                                   |
+| `--outdir` | `path`    | `./results` | Directory where results are written.                                                                   |
 | `--save_fastqc` | `boolean` | `false`              | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports). |
 
 ### Advanced usage
