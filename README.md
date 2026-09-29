@@ -30,7 +30,7 @@ This pipeline supports Illumina paired-end sequencing data only.
      git submodule init
    ```
 
-2. To run with `docker`, use the `-profile docker` option:
+2. To run with Docker containers, use the `-profile docker` option:
 
    ```bash
    nextflow run main.nf \
@@ -39,8 +39,9 @@ This pipeline supports Illumina paired-end sequencing data only.
        --outdir my_output
    ```
 
-   Other profiles are also supported (`singularity`).
-   :warning: If no profile is specified the pipeline will run with the Sanger HPC-specific configuration.
+   Similarly, the `singularity` profile enables support for Singularity/Apptainer containers.  
+   
+   :warning: If no profile is specified the pipeline will run with the Sanger HPC-specific configuration. Non-Sanger users should use either `docker` or `singularity` profiles
 
 3. Once the run has finished successfully and you have inspected the output, clean up intermediate files. The `work/` directory and `.nextflow.log` are useful for troubleshooting — do not delete them until you are satisfied the outputs are correct:
 
@@ -50,7 +51,7 @@ This pipeline supports Illumina paired-end sequencing data only.
 
    Alternatively, use `nextflow clean` for more fine-grained control over which runs and intermediate files are removed.
 
-#### Using on the Sanger farm
+#### Using on the Sanger "farm" HPC
 
 First load the latest pipeline module:
 
