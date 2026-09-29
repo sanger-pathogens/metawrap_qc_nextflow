@@ -115,6 +115,10 @@ Several input options are available and can be combined, including `--manifest` 
 
 **Sanger users only:** the [manifest_generator](https://gitlab.internal.sanger.ac.uk/sanger-pathogens/pipelines/manifest_generator/) tool can generate a compatible `ID,R1,R2` manifest from a directory of FASTQ files or from iRODS.
 
+#### Running outside of Sanger
+
+The BMTagger database defaults to a Sanger-internal path (`/data/pam/software/bmtagger`). When running outside of Sanger, provide the path to a locally installed BMTagger database via `--bmtagger_db`. The database must contain prebuilt BMTagger index files for the selected host reference. (see [Dependencies section](#dependencies) below for download/build instructions)
+
 ### Output
 
 Results are written to the value of `--outdir` parameter (default: `./results`):
@@ -179,23 +183,19 @@ For more information, please read [the MIXED_INPUT workflow documentation](./ass
 | `--outdir` | `path`    | `./results` | Directory where results are written.                                                                   |
 | `--save_fastqc` | `boolean` | `false`              | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports). |
 
-### Advanced usage
-
-#### Running outside of Sanger
-
-The BMTagger database defaults to a Sanger-internal path (`/data/pam/software/bmtagger`). When running outside of Sanger, provide the path to a locally installed BMTagger database via `--bmtagger_db`. The database must contain prebuilt BMTagger index files for the selected host reference.
-
-#### Custom host reference
-
-To decontaminate against a host other than human, provide a different BMTagger database prefix to `--bmtagger_db` and set `--bmtagger_host` to the corresponding reference name.
-
 ### Dependencies
 
-All dependencies are containerised in publicly available Docker/Singularity images.
+#### BMTagger database 
 
-- BMTagger database (human T2T-CHM13v2.0): available at `/data/pam/software/bmtagger` on the Sanger HPC. For external users, download from [NCBI](https://www.ncbi.nlm.nih.gov/genome/51) and build the BMTagger index. For information on how to build the database, please refer to [the workflow documentation](./assorted-sub-workflows/mags_maker/metawrap_qc/README.md).
+The indexes for the complete human genome assemblies `hg38` and `T2T-CHM13v2.0` are available at `/data/pam/software/bmtagger` on the Sanger HPC.  
 
-## Software versions
+For external users, download from [NCBI](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009914755.1/) and build the BMTagger index. For information on how to build the database, please refer to [the workflow documentation](./assorted-sub-workflows/mags_maker/metawrap_qc/README.md).
+
+To decontaminate against another human reference genome or a host other than human, provide a different BMTagger database prefix to `--bmtagger_db` and set `--bmtagger_host` to the corresponding reference name.
+
+#### Software dependencies
+
+All software dependencies are containerised in publicly available Docker/Singularity images.
 
 | Software       | Version | Image                                              |
 | -------------- | ------- | -------------------------------------------------- |
