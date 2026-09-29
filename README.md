@@ -33,14 +33,11 @@ This pipeline supports Illumina paired-end sequencing data only.
 2. To run with Docker containers, use the `-profile docker` option:
 
    ```bash
-   nextflow run main.nf \
-       -profile docker \
-       --manifest manifest.csv \
-       --outdir my_output
+   nextflow run main.nf -profile docker [options]
    ```
 
    Similarly, the `singularity` profile enables support for Singularity/Apptainer containers.  
-   
+
    :warning: If no profile is specified the pipeline will run with the Sanger HPC-specific configuration. Non-Sanger users should use either `docker` or `singularity` profiles
 
 3. Once the run has finished successfully and you have inspected the output, clean up intermediate files. The `work/` directory and `.nextflow.log` are useful for troubleshooting — do not delete them until you are satisfied the outputs are correct:
@@ -102,7 +99,7 @@ An example manifest is provided in this repository: [example_manifest.csv](./exa
 
 #### Other input options.
 
-Several input options are available, including `--manifest_of_lanes`, `--manifest_ena`, `--manifest_from_dir` and/or a combination of some of the follwing pramaeters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
+Several input options are available and can be combined, including `--manifest_of_lanes`, `--manifest_ena`, `--manifest_from_dir` and/or a combination of some of the follwing pramaeters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
 
 #### Generating a manifest from a directory of FASTQ files or iRODS metadata
 
