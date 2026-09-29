@@ -158,7 +158,7 @@ For more information, please read [the MIXED_INPUT workflow documentation](./ass
 
 | Option            | Type     | Default                       | Description                                                        |
 | ----------------- | -------- | ----------------------------- | ------------------------------------------------------------------ |
-| `--bmtagger_db`   | `path`   | `/data/pam/software/bmtagger` | Path to the BMTagger database directory.                           |
+| `--bmtagger_db`   | `path`   | `/data/pam/software/bmtagger` | Path to the BMTagger database directory. For non-Sanger users, the bmtagger database will need to be downloaded separately.                           |
 | `--bmtagger_host` | `string` | `T2T-CHM13v2.0`               | Name of the BMTagger host reference to use for human read removal. |
 
 ---
