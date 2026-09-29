@@ -185,7 +185,7 @@ To decontaminate against a host other than human, provide a different BMTagger d
 
 All dependencies are containerised in publicly available Docker/Singularity images.
 
-- BMTagger database (human T2T-CHM13v2.0): available at `/data/pam/software/bmtagger` on the Sanger HPC. For external users, download from [NCBI](https://www.ncbi.nlm.nih.gov/genome/51) and build the BMTagger index.
+- BMTagger database (human T2T-CHM13v2.0): available at `/data/pam/software/bmtagger` on the Sanger HPC. For external users, download from [NCBI](https://www.ncbi.nlm.nih.gov/genome/51) and build the BMTagger index. For information on how to build the database, please refer to [the workflow documentation](./assorted-sub-workflows/mags_maker/metawrap_qc/README.md).
 
 ## Software versions
 
