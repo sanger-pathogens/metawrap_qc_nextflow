@@ -1,54 +1,222 @@
 # metawrap_qc_nextflow
 
-This pipeline performs adapter trimming using trim-galore and human read removal using bmtagger and is based off the metaWRAP software (https://github.com/bxlab/metaWRAP)
-This pipeline supports illumina paired end sequencing data only.
+[[_TOC_]]
+
+## Pipeline overview
+
+metawrap_qc_nextflow is a Nextflow DSL2 pipeline for preprocessing metagenomic short-read data, based on the [metaWRAP](https://github.com/bxlab/metaWRAP) QC module. It performs adapter trimming and human read decontamination on Illumina paired-end FASTQ data, producing clean reads suitable for downstream metagenomic assembly or analysis.
+
+The pipeline performs the following steps:
+
+1. **Pre-filtering QC** — FastQC reports are generated on the raw input reads.
+2. **Adapter trimming** — TrimGalore removes adapter sequences and low-quality bases.
+3. **Human read removal** — BMTagger screens trimmed reads against a human reference (T2T-CHM13v2.0 by default) and removes any matching reads.
+4. **Post-filtering QC** — FastQC reports are generated on the cleaned reads.
+5. **Reporting** — MultiQC aggregates QC metrics from both pre- and post-filtering steps. Read counts before and after each filtering step are collected and collated into a per-sample summary.
+
+This pipeline supports Illumina paired-end sequencing data only.
 
 ## Usage
 
-```
-Usage:
-nextflow run main.nf
+### Quickstart
 
-Options:
-  --manifest                   Manifest containing paths to fastq files (mandatory)
-  --outdir                     Name of results folder. [default: results] (optional)
-  --bmtagger_db                Path to bmtagger database. [default: /data/pam/software/bmtagger] (optional)
-  --bmtagger_host              Name of bmtagger host. [default: T2T-CHM13v2.0] (optional)
-  --skip_fastqc                Skip FASTQC. [default: false] (optional)
-  --publish_host_reads         Publish host reads to results folder. [default: false] (optional)
-  --help                       Print this help message. (optional)
-```
+#### From source code
 
-An example manifest is stored in this repo ([example_manifest.csv](./example_manifest.csv)).
+1. Clone this repository:
 
-## Dependencies
+   ```bash
+   git clone --recurse-submodules https://github.com/sanger-pathogens/metawrap_qc_nextflow.git && \
+     cd metawrap_qc_nextflow && \
+     git submodule init
+   ```
 
-This pipeline relies on the following modules:
+2. To run with Docker containers, use the `-profile docker` option:
 
-```
-nextflow
-ISG/singularity
-```
+   ```bash
+   nextflow run main.nf -profile docker [options]
+   ```
 
-## Example commands
+   Similarly, the `singularity` profile enables support for Singularity/Apptainer containers.
 
-Running the pipeline with the default configuration:
+   :warning: If no profile is specified the pipeline will run with the Sanger HPC-specific configuration. Non-Sanger users should use either `docker` or `singularity` profiles
 
-```
-module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run main.nf --manifest <your_manifest.csv> --results_dir example_results
-```
+3. Once the run has finished successfully and you have inspected the output, clean up intermediate files. The `work/` directory and `.nextflow.log` are useful for troubleshooting — do not delete them until you are satisfied the outputs are correct:
 
-Running the pipeline without FASTQC:
+   ```bash
+   rm -rf work .nextflow*
+   ```
 
-```
-module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run main.nf --manifest manifest.csv --skip_fastqc
+   Alternatively, use `nextflow clean` for more fine-grained control over which runs and intermediate files are removed.
+
+#### Using on the Sanger "farm" HPC
+
+First load the latest pipeline module:
+
+```bash
+module load metawrap_qc_nextflow
 ```
 
-Running the pipeline with publishing host reads to results folder:
+Then run on the command line with `metawrap_qc_nextflow <options>`. For instance, to see a help message:
+
+```bash
+metawrap_qc_nextflow --help
+```
+
+Submit to LSF:
+
+```bash
+jobname="my_metawrap_qc_run" # you can edit this!
+bsub -o ${jobname}.%J.o -e ${jobname}.%J.e -q oversubscribed -J ${jobname} -R "select[mem>4000] rusage[mem=4000]" -M4000 \
+    metawrap_qc_nextflow [options]
+```
+
+#### From code archive downloaded from the Github Release section or from Zenodo
+
+Please be aware that the code archive asset attached to a release will have empty folders for the dependcy submodules `assorted-sub-workflows` ([repository](https://github.com/sanger-pathogens/assorted-sub-workflows)) and `lib` (points to `nextflowtool` [repository](https://github.com/sanger-pathogens/nextflowtool)). The code executed from these archives will therefore **NOT** be functional. Unfortunately, the `.git` folder will be missing too, meaning that it is not a working `git` repository and submodule folders _cannot_ be populated with `git submodule init`.
+
+It is thus recommended to use the `git clone` approach described above, adding the commands below to get the code version referred to in the release:
+
+```bash
+git checkout <revision_tag> # e.g. revision_tag can be "v1.8.1"
+git pull --recurse-submodules
+```
+
+### General usgae
+
+This pipeline requires a few mandatory options, outlined below:
+
+```sh
+nextflow run main.nf  \
+        --manifest manifest.csv \
+        --outdir "results" \
+        --bmtagger_db "/path/to/local/bmtagger/db/build"
+```
+
+### Input
+
+#### Manifest (`--manifest`)
+
+A CSV file with the required header `ID,R1,R2`, containing per-sample paths to paired `.fastq.gz` files:
 
 ```
-module load nextflow ISG/singularity bsub.py
-bsub.py 5 -q oversubscribed metawrap_job nextflow run main.nf --manifest manifest.csv --publish_host_reads
+ID,R1,R2
+sampleA,/path/to/sampleA_1.fastq.gz,/path/to/sampleA_2.fastq.gz
+sampleB,/path/to/sampleB_1.fastq.gz,/path/to/sampleB_2.fastq.gz
 ```
+
+An example manifest is provided in this repository: [example_manifest.csv](./example_manifest.csv).
+
+> Note: `--manifest` is not mandatory, but at least one of the options described below must be provided.
+
+#### Other input options.
+
+Several input options are available and can be combined, including `--manifest` (or its alias `--manifest_of_reads`), `--manifest_ena`, `--manifest_from_dir` and (for Sanger users only) `--manifest_of_lanes`, and/or (also for Sanger users only) a combination of some of the follwing parameters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
+
+#### Generating a manifest from a directory of FASTQ files or iRODS metadata
+
+**Sanger users only:** the [manifest_generator](https://gitlab.internal.sanger.ac.uk/sanger-pathogens/pipelines/manifest_generator/) tool can generate a compatible `ID,R1,R2` manifest from a directory of FASTQ files or from iRODS.
+
+#### Running outside of Sanger
+
+The BMTagger database defaults to a Sanger-internal path (`/data/pam/software/bmtagger`). When running outside of Sanger, provide the path to a locally installed BMTagger database via `--bmtagger_db`. The database must contain prebuilt BMTagger index files for the selected host reference. (see [Dependencies section](#dependencies) below for download/build instructions)
+
+### Output
+
+Results are written to the value of `--outdir` parameter (default: `./results`):
+
+```
+results/
+  metawrap_qc/
+    cleaned_reads/
+      <sample_ID>_clean_1.fastq.gz   # Adapter-trimmed, human-depleted reads
+      <sample_ID>_clean_2.fastq.gz
+    host_reads/                      # Only when --publish_host_reads is set
+      <sample_ID>_host_1.fastq.gz
+      <sample_ID>_host_2.fastq.gz
+  multiqc/
+    pre_qc_multiqc_report.html     # MultiQC report on raw reads (unless --skip_fastqc)
+    post_qc_multiqc_report.html    # MultiQC report on cleaned reads (unless --skip_fastqc)
+  read_removal_statistics.csv      # Per-sample read removal statistics
+```
+
+### Parameters
+
+**Input options**
+
+Multiple input options are available, and can be combined. Providing at least one is mandatory.
+
+| Option                                          | Type   | Default | Description                                                                                                                                                                                                                   |
+| ----------------------------------------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--manifest_of_reads`                           | `path` | `null`  | Input manifest CSV with required header `ID,R1,R2`.                                                                                                                                                                           |
+| `--manifest`                                    | `path` | `null`  | Same as `--manifest_of_reads` (alias).                                                                                                                                                                                        |
+| `--manifest_of_lanes`                           | `path` | `null`  | **Sanger users only:** Input manifest CSV for submission of multiple iRODS (meta)data queries; various header fields can be used that refer to iRODS metadata fields, including `sudyid`,`runid`,`laneid`,`plexid` or `type`. |
+| `--manifest_ena`                                | `path` | `null`  | Input manifest for submission of multiple ENA (meta)data queries; no header required, the only required content should be ENA accessions, one per line. This option should be accopanied by the `--accession_type` option.    |
+| `--accession_type`                              | `str`  | `"run"` | One of the following types: `run`, `study`, `sample`.                                                                                                                                                                         |
+| `--manifest_from_dir`                           | `path` | `null`  | Path to a folder containing paired Fastq files; file pairing will be done automatically; see help message from [the executed script](./assorted-sub-workflows/mixed_input/bin/generate_manifest.py).                          |
+| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str`  | `null`  | **Sanger users only:** Individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query).                                           |
+
+For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
+
+---
+
+**Decontamination options**
+
+| Option            | Type     | Default                       | Description                                                                                                                 |
+| ----------------- | -------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `--bmtagger_db`   | `path`   | `/data/pam/software/bmtagger` | Path to the BMTagger database directory. For non-Sanger users, the bmtagger database will need to be downloaded separately. |
+| `--bmtagger_host` | `string` | `T2T-CHM13v2.0`               | Name of the BMTagger host reference to use for human read removal.                                                          |
+
+---
+
+**Pipeline options**
+
+| Option                 | Type      | Default | Description                                          |
+| ---------------------- | --------- | ------- | ---------------------------------------------------- |
+| `--skip_fastqc`        | `boolean` | `false` | Skip FastQC steps (both pre- and post-filtering).    |
+| `--publish_host_reads` | `boolean` | `false` | Publish host (human) reads to the results directory. |
+
+---
+
+**Output options**
+
+| Option          | Type      | Default     | Description                                                                                            |
+| --------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------ |
+| `--outdir`      | `path`    | `./results` | Directory where results are written.                                                                   |
+| `--save_fastqc` | `boolean` | `false`     | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports). |
+
+### Dependencies
+
+#### BMTagger database
+
+The indexes for the complete human genome assemblies `hg38` and `T2T-CHM13v2.0` are available at `/data/pam/software/bmtagger` on the Sanger HPC.
+
+For external users, download from [NCBI](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009914755.1/) and build the BMTagger index. For information on how to build the database, please refer to [the workflow documentation](./assorted-sub-workflows/mags_maker/metawrap_qc/README.md).
+
+To decontaminate against another human reference genome or a host other than human, provide a different BMTagger database prefix to `--bmtagger_db` and set `--bmtagger_host` to the corresponding reference name.
+
+#### Software dependencies
+
+All software dependencies are containerised in publicly available Docker/Singularity images.
+
+| Software       | Version | Image                                              |
+| -------------- | ------- | -------------------------------------------------- |
+| FastQC         | 0.12.1  | `quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0`  |
+| TrimGalore     | 0.4.4   | `quay.io/sangerpathogens/trimgalore:v0.4.4`        |
+| BMTagger       | 3.101   | `quay.io/biocontainers/bmtagger:3.101--h470a237_4` |
+| MultiQC        | 1.35    | `quay.io/biocontainers/multiqc:1.35--pyhdfd78af_1` |
+| Python (stats) | 1.0     | `quay.io/sangerpathogens/metawrap_qc_python:1.0`   |
+
+## Troubleshooting
+
+- **BMTagger database not found**: ensure `--bmtagger_db` points to a directory containing a valid BMTagger index for the selected host reference. On the Sanger HPC the default path `/data/pam/software/bmtagger` should be available.
+- **Out of memory for BMTagger**: BMTagger loads the full database into memory. The default resource allocation uses 16 GB RAM; request more via a custom config if needed.
+- **Resuming a failed run**: add `-resume` to your command to restart from cached intermediate results.
+- For further help, check `.nextflow.log` and the per-process `.command.log` logs in the `work/` directory.
+
+Sanger users may find [this page](https://ssg-confluence.internal.sanger.ac.uk/spaces/PaMI/pages/181078206/General+pipeline+info#Generalpipelineinfo-Troubleshootingafailedpipelinerunandsendingabugreport) useful for troubleshooting Nextflow pipeline runs.
+
+## Issues and Contributions
+
+**GitHub users:** if you find an issue with this pipeline, or would like to suggest an improvement, please log an issue or open a pull request on this repository.
+
+**Sanger users:** if you need internal support, you can raise an issue on the PAM Freshservice portal: https://sanger.freshservice.com/support/catalog/items/426
