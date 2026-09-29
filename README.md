@@ -36,7 +36,7 @@ This pipeline supports Illumina paired-end sequencing data only.
    nextflow run main.nf -profile docker [options]
    ```
 
-   Similarly, the `singularity` profile enables support for Singularity/Apptainer containers.  
+   Similarly, the `singularity` profile enables support for Singularity/Apptainer containers.
 
    :warning: If no profile is specified the pipeline will run with the Sanger HPC-specific configuration. Non-Sanger users should use either `docker` or `singularity` profiles
 
@@ -84,6 +84,7 @@ git pull --recurse-submodules
 ### General usgae
 
 This pipeline requires a few mandatory options, outlined below:
+
 ```sh
 nextflow run main.nf  \
         --manifest manifest.csv \
@@ -109,7 +110,7 @@ An example manifest is provided in this repository: [example_manifest.csv](./exa
 
 #### Other input options.
 
-Several input options are available and can be combined, including `--manifest` (or its alias `--manifest_of_reads`), `--manifest_ena`, `--manifest_from_dir` and (for Sanger users only) `--manifest_of_lanes`,  and/or (also for Sanger users only) a combination of some of the follwing parameters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
+Several input options are available and can be combined, including `--manifest` (or its alias `--manifest_of_reads`), `--manifest_ena`, `--manifest_from_dir` and (for Sanger users only) `--manifest_of_lanes`, and/or (also for Sanger users only) a combination of some of the follwing parameters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
 
 #### Generating a manifest from a directory of FASTQ files or iRODS metadata
 
@@ -144,15 +145,15 @@ results/
 
 Multiple input options are available, and can be combined. Providing at least one is mandatory.
 
-| Option                                          | Type   | Default | Description                                                                                                                                                                                                                |
-| ----------------------------------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--manifest_of_reads`                           | `path` | `null`  | Input manifest CSV with required header `ID,R1,R2`.                                                                                                                                                                        |
-| `--manifest`                                    | `path` | `null`  | Same as `--manifest_of_reads` (alias).                                                                                                                                                                                     |
-| `--manifest_of_lanes`                           | `path` | `null`  | **Sanger users only:** Input manifest CSV for submission of multiple iRODS (meta)data queries; various header fields can be used that refer to iRODS metadata fields, including `sudyid`,`runid`,`laneid`,`plexid` or `type`.                     |
-| `--manifest_ena`                                | `path` | `null`  | Input manifest for submission of multiple ENA (meta)data queries; no header required, the only required content should be ENA accessions, one per line. This option should be accopanied by the `--accession_type` option. |
-| `--accession_type`                              | `str`  | `"run"` | One of the following types: `run`, `study`, `sample`.                                                                                                                                                                      |
-| `--manifest_from_dir`                           | `path` | `null`  | Path to a folder containing paired Fastq files; file pairing will be done automatically; see help message from [the executed script](./assorted-sub-workflows/mixed_input/bin/generate_manifest.py).                       |
-| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str`  | `null`  | **Sanger users only:** Individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query).                                                               |
+| Option                                          | Type   | Default | Description                                                                                                                                                                                                                   |
+| ----------------------------------------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--manifest_of_reads`                           | `path` | `null`  | Input manifest CSV with required header `ID,R1,R2`.                                                                                                                                                                           |
+| `--manifest`                                    | `path` | `null`  | Same as `--manifest_of_reads` (alias).                                                                                                                                                                                        |
+| `--manifest_of_lanes`                           | `path` | `null`  | **Sanger users only:** Input manifest CSV for submission of multiple iRODS (meta)data queries; various header fields can be used that refer to iRODS metadata fields, including `sudyid`,`runid`,`laneid`,`plexid` or `type`. |
+| `--manifest_ena`                                | `path` | `null`  | Input manifest for submission of multiple ENA (meta)data queries; no header required, the only required content should be ENA accessions, one per line. This option should be accopanied by the `--accession_type` option.    |
+| `--accession_type`                              | `str`  | `"run"` | One of the following types: `run`, `study`, `sample`.                                                                                                                                                                         |
+| `--manifest_from_dir`                           | `path` | `null`  | Path to a folder containing paired Fastq files; file pairing will be done automatically; see help message from [the executed script](./assorted-sub-workflows/mixed_input/bin/generate_manifest.py).                          |
+| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str`  | `null`  | **Sanger users only:** Individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query).                                           |
 
 For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
 
@@ -160,10 +161,10 @@ For more information, please read [the MIXED_INPUT workflow documentation](./ass
 
 **Decontamination options**
 
-| Option            | Type     | Default                       | Description                                                        |
-| ----------------- | -------- | ----------------------------- | ------------------------------------------------------------------ |
-| `--bmtagger_db`   | `path`   | `/data/pam/software/bmtagger` | Path to the BMTagger database directory. For non-Sanger users, the bmtagger database will need to be downloaded separately.                           |
-| `--bmtagger_host` | `string` | `T2T-CHM13v2.0`               | Name of the BMTagger host reference to use for human read removal. |
+| Option            | Type     | Default                       | Description                                                                                                                 |
+| ----------------- | -------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `--bmtagger_db`   | `path`   | `/data/pam/software/bmtagger` | Path to the BMTagger database directory. For non-Sanger users, the bmtagger database will need to be downloaded separately. |
+| `--bmtagger_host` | `string` | `T2T-CHM13v2.0`               | Name of the BMTagger host reference to use for human read removal.                                                          |
 
 ---
 
@@ -178,16 +179,16 @@ For more information, please read [the MIXED_INPUT workflow documentation](./ass
 
 **Output options**
 
-| Option          | Type      | Default              | Description                                                                                            |
-| --------------- | --------- | -------------------- | ------------------------------------------------------------------------------------------------------ |
-| `--outdir` | `path`    | `./results` | Directory where results are written.                                                                   |
-| `--save_fastqc` | `boolean` | `false`              | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports). |
+| Option          | Type      | Default     | Description                                                                                            |
+| --------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------ |
+| `--outdir`      | `path`    | `./results` | Directory where results are written.                                                                   |
+| `--save_fastqc` | `boolean` | `false`     | Save individual FastQC report (both pre- and post-filtering; redundant with combined MultiQC reports). |
 
 ### Dependencies
 
-#### BMTagger database 
+#### BMTagger database
 
-The indexes for the complete human genome assemblies `hg38` and `T2T-CHM13v2.0` are available at `/data/pam/software/bmtagger` on the Sanger HPC.  
+The indexes for the complete human genome assemblies `hg38` and `T2T-CHM13v2.0` are available at `/data/pam/software/bmtagger` on the Sanger HPC.
 
 For external users, download from [NCBI](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009914755.1/) and build the BMTagger index. For information on how to build the database, please refer to [the workflow documentation](./assorted-sub-workflows/mags_maker/metawrap_qc/README.md).
 
