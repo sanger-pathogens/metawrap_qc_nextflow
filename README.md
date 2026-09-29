@@ -148,7 +148,7 @@ Multiple input options are available, and can be combined. Providing at least on
 | `--manifest_ena`                                | `path` | `null`  | Input manifest for submission of multiple ENA (meta)data queries; no header required, the only required content should be ENA accessions, one per line. This option should be accopanied by the `--accession_type` option. |
 | `--accession_type`                              | `str`  | `"run"` | One of the following types: `run`, `study`, `sample`.                                                                                                                                                                      |
 | `--manifest_from_dir`                           | `path` | `null`  | Path to a folder containing paired Fastq files; file pairing will be done automatically; see help message from [the executed script](./assorted-sub-workflows/mixed_input/bin/generate_manifest.py).                       |
-| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str`  | `null`  | individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query).                                                               |
+| `sudyid`,`runid`,`laneid`,`plexid`, `type`, ... | `str`  | `null`  | **Sanger users only:** Individual fields to be combined to form a single iRODS query (similar syntax as with `--manifest_of_lanes`, but resulting in a separate, additional query).                                                               |
 
 For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
 
