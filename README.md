@@ -67,20 +67,28 @@ Submit to LSF:
 ```bash
 jobname="my_metawrap_qc_run" # you can edit this!
 bsub -o ${jobname}.%J.o -e ${jobname}.%J.e -q oversubscribed -J ${jobname} -R "select[mem>4000] rusage[mem=4000]" -M4000 \
-    metawrap_qc_nextflow \
-        --manifest manifest.csv \
-        --outdir "results_${jobname}"
+    metawrap_qc_nextflow [options]
 ```
 
 #### From code archive downloaded from the Github Release section or from Zenodo
 
 Please be aware that the code archive asset attached to a release will have empty folders for the dependcy submodules `assorted-sub-workflows` ([repository](https://github.com/sanger-pathogens/assorted-sub-workflows)) and `lib` (points to `nextflowtool` [repository](https://github.com/sanger-pathogens/nextflowtool)). The code executed from these archives will therefore **NOT** be functional. Unfortunately, the `.git` folder will be missing too, meaning that it is not a working `git` repository and submodule folders _cannot_ be populated with `git submodule init`.
 
-It is thus recommended to use the `git clone` appraoch described above, adding the commands below to get the code version referred to in the release:
+It is thus recommended to use the `git clone` approach described above, adding the commands below to get the code version referred to in the release:
 
 ```bash
 git checkout <revision_tag> # e.g. revision_tag can be "v1.8.1"
 git pull --recurse-submodules
+```
+
+### General usgae
+
+This pipeline requires a few mandatory options, outlined below:
+```sh
+nextflow run main.nf  \
+        --manifest manifest.csv \
+        --outdir "results" \
+        --bmtagger_db "/path/to/local/bmtagger/db/build"
 ```
 
 ### Input
@@ -97,9 +105,11 @@ sampleB,/path/to/sampleB_1.fastq.gz,/path/to/sampleB_2.fastq.gz
 
 An example manifest is provided in this repository: [example_manifest.csv](./example_manifest.csv).
 
+> Note: `--manifest` is not mandatory, but at least one of the options described below must be provided.
+
 #### Other input options.
 
-Several input options are available and can be combined, including `--manifest_of_lanes`, `--manifest_ena`, `--manifest_from_dir` and/or a combination of some of the follwing pramaeters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
+Several input options are available and can be combined, including `--manifest` (or its alias `--manifest_of_reads`), `--manifest_ena`, `--manifest_from_dir` and (for Sanger users only) `--manifest_of_lanes`,  and/or (also for Sanger users only) a combination of some of the follwing parameters: `sudyid`,`runid`,`laneid`,`plexid`, `type`, etc.. For more information, please read [the MIXED_INPUT workflow documentation](./assorted-sub-workflows/README.md).
 
 #### Generating a manifest from a directory of FASTQ files or iRODS metadata
 
